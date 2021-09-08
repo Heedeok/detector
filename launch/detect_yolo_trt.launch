@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+    <!-- Camera topic  -->
+    <arg name="image_topic"	                default="/camera/color/image_raw"/>
+    <arg name="use_depth"                   default="true"/> <!-- If false, only use RGB and distance is 0mm-->
+    <arg name="depth_topic"	                default="/camera/aligned_depth_to_color/image_raw"/>
+    
+    <!-- Published topics -->
+    <arg name="publish_image"	            default="true"/>
+    <arg name="detected_objects"       default="detected_objects"/>
+    <arg name="detected_image"        default="detected_image"/>
+
+    <!-- Detection model onfiguration -->
+    <arg name="plugin_library"	            default="yolov5_trt/engine/libmyplugins.so"/>
+    <arg name="engine"	            default="yolov5_trt/engine/yolov5.engine"/>
+    <arg name="confidence"                  default="0.5"/>
+    <arg name="nms_th"                      default="0.4"/>
+    <arg name="class_name"                  default='person'/> <!-- COCO index name, 'None': all class detect-->
+    
+    <!-- <arg name="class_name"                  default='person'/> -->
+   
+    <!-- Node -->
+    <node name="detector_yolo_node" pkg="detector" type="detect_yolo_trt.py" output="screen" respawn="true">
+        <param name="image_topic"               value="$(arg image_topic)"/>
+        <param name="use_depth"                 value="$(arg use_depth)"/>
+        <param name="depth_topic"               value="$(arg depth_topic)"/>
+        <param name="publish_image"             value="$(arg publish_image)"/>
+        <param name="detected_objects"          value="$(arg detected_objects)"/>
+        <param name="detected_image"            value="$(arg detected_image)"/>
+        <param name="plugin_library"            value="$(arg plugin_library)"/>
+        <param name="engine"                    value="$(arg engine)"/>
+        <param name="confidence"                  value="$(arg confidence)"/>
+        <param name="nms_th"                      value="$(arg nms_th)"/>
+        <param name="class_name"                 value="$(arg class_name)"/>
+        </node>
+</launch>

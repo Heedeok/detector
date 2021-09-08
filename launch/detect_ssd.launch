@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+    <!-- Camera topic  -->
+    <arg name="image_topic"	                default="/camera/color/image_raw"/>
+    <arg name="use_depth"                   default="false"/> <!-- If false, only use RGB and distance is 0mm-->
+    <arg name="depth_topic"	                default="/camera/aligned_depth_to_color/image_raw"/>
+    <arg name="detect_topic"	                default="/detectnet_time/detections"/>
+    
+    <!-- Published topics -->
+    <arg name="publish_image"	            default="true"/>
+    <arg name="tracked_objects_topic"       default="tracked_objects_in_image"/>
+    <arg name="tracking_image_topic"        default="tracking_image_topic"/>
+
+    <!-- Tracking model onfiguration -->
+    <arg name="config_path"                 default="deep_sort_pytorch/configs/deep_sort.yaml"/>
+    <arg name="ckpt_path"                   default="deep_sort_pytorch/deep_sort/deep/checkpoint/ckpt.t7"/>
+    <arg name="class_name"                   default="1"/> <!-- person is 1-->
+    
+    <!-- if you don't have GPU input the value 'cpu' -->
+    <arg name="gpu_id"                      default="0"/>
+   
+    <!-- Node -->
+    <node name="deepsort_ros_node" pkg="deepsort_ros" type="tracker_node.py" output="screen" respawn="true">
+        <param name="image_topic"               value="$(arg image_topic)"/>
+        <param name="use_depth"                 value="$(arg use_depth)"/>
+        <param name="depth_topic"               value="$(arg depth_topic)"/>
+        <param name="detect_topic"	            value="$(arg detect_topic)"/>
+        <param name="publish_image"             value="$(arg publish_image)"/>
+        <param name="tracked_objects_topic"     value="$(arg tracked_objects_topic)"/>
+        <param name="tracking_image_topic"      value="$(arg tracking_image_topic)"/>
+        <param name="config_path"               value="$(arg config_path)"/>
+        <param name="ckpt_path"                 value="$(arg ckpt_path)"/>
+        <param name="class_name"                 value="$(arg class_name)"/>
+        <param name="gpu_id"                    value="$(arg gpu_id)"/>
+        </node>
+</launch>
